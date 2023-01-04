@@ -11,6 +11,7 @@ import io.github.Speciallist.api.domain.User;
 import io.github.Speciallist.api.domain.dto.UserDTO;
 import io.github.Speciallist.api.repositories.UserRepository;
 import io.github.Speciallist.api.services.UserService;
+import io.github.Speciallist.api.services.exceptions.DataIntegrityViolationException;
 import io.github.Speciallist.api.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -35,7 +36,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(UserDTO userDTO) {
+		findByEmail(userDTO);
 		return userRepository.save(mapper.map(userDTO, User.class));
+	}
+
+	private void findByEmail(UserDTO userDTO) {
+		Optional<User> user = userRepository.findByEmail(userDTO.getEmail());
+		if (user.isPresent()) {
+			throw new DataIntegrityViolationException("E-mail já cadastradpo no sistema");
+		}
 	}
 
 }
