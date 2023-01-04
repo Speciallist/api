@@ -13,4 +13,6 @@ public interface UserService {
 
 	public User create(UserDTO userDTO);
 
+	public User update(UserDTO userDTO);
+
 }
