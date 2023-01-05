@@ -28,8 +28,9 @@ class UserServiceImplTest {
     public static final String NAME = "Kodlak";
     public static final String EMAIL = "kodlak@companions.com";
     public static final String PASSWORD = "123";
-    public static final String OBJETO_NÃO_ENCONTRADO = "Objeto não encontrado";
+    public static final String OBJETO_NAO_ENCONTRADO = "Objeto não encontrado";
     public static final int INDEX = 0;
+    public static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -66,12 +67,12 @@ class UserServiceImplTest {
 
     @Test
     void whenFindByIdThenReturnAnObjectNotFoundException() {
-        when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NÃO_ENCONTRADO));
+        when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NAO_ENCONTRADO));
         try {
             userService.findById(ID);
         } catch (Exception exception) {
             assertEquals(ObjectNotFoundException.class, exception.getClass());
-            assertEquals(OBJETO_NÃO_ENCONTRADO, exception.getMessage());
+            assertEquals(OBJETO_NAO_ENCONTRADO, exception.getMessage());
         }
     }
 
@@ -110,7 +111,7 @@ class UserServiceImplTest {
             userService.create(userDTO);
         } catch (Exception exception) {
             assertEquals(DataIntegrityViolationException.class, exception.getClass());
-            assertEquals("E-mail já cadastrado no sistema", exception.getMessage());
+            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, exception.getMessage());
         }
     }
 
@@ -125,6 +126,19 @@ class UserServiceImplTest {
         assertEquals(NAME, response.getName());
         assertEquals(EMAIL, response.getEmail());
         assertEquals(PASSWORD, response.getPassword());
+    }
+
+    @Test
+    void whenUpdateThenReturnADataIntegrityViolationException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2);
+            userService.create(userDTO);
+        } catch (Exception exception) {
+            assertEquals(DataIntegrityViolationException.class, exception.getClass());
+            assertEquals(E_MAIL_JA_CADASTRADO_NO_SISTEMA, exception.getMessage());
+        }
     }
 
     @Test
