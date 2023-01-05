@@ -1,22 +1,20 @@
 package io.github.Speciallist.api.resources.exceptions;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class StandardError {
 
-	private Integer status;
+    private Integer status;
 
-	private LocalDateTime timestamp;
+    private LocalDateTime timestamp;
 
-	private String error;
+    private String error;
 
-	private String path;
+    private String path;
 
 }
